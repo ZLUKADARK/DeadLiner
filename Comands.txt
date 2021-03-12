@@ -1,0 +1,2 @@
+rm  api/migrations/*
+rm db.sqlite3
