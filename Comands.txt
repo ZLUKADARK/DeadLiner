@@ -1,2 +1,42 @@
 rm  api/migrations/*
 rm db.sqlite3
+
+
+
+
+
+
+
+
+
+
+
+
+class Semester(models.Model):
+    SEASONS = (
+        ('f', _("Fall")),
+        ('s', _("Spring")),
+        ('u', _("Summer")),
+        ('w', _("Winter")),
+    )
+    season = models.CharField(max_length=1, verbose_name=_("season"),choices=SEASONS)
+    start_date = models.DateField(verbose_name=_('semester start date'))
+    end_date = models.DateField(verbose_name=_('semester end date'))
+    registration_starts = models.DateField(verbose_name=_('registration start date'),null=True, blank=True)
+    registration_ends = models.DateField(verbose_name=_('registration end date'),null=True, blank=True)
+    add_drop_ends = models.DateField(verbose_name=_('add drop period end date'),null=True, blank=True)
+    midterm_exam_starts = models.DateField(verbose_name=_('midterm exam start date'),null=True, blank=True)
+    midterm_exam_ends = models.DateField(verbose_name=_('midterm exam end date'),null=True, blank=True)
+    final_exam_starts = models.DateField(verbose_name=_('final exam start date'),null=True, blank=True)
+    final_exam_ends = models.DateField(verbose_name=_('final exams end date'),null=True, blank=True)
+    is_published = models.BooleanField(verbose_name=_('is published'),default=False)
+
+@property
+    def registration_days_left(self):
+        today = timezone.now().date()
+        days_left = None
+        if self.is_registration_period:
+            days_left = (self.registration_ends - today).days
+        if self.is_add_drop_period:
+            days_left = (self.add_drop_ends - today).days
+        return days_left
