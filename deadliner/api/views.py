@@ -1,4 +1,5 @@
 from rest_framework.decorators import api_view
+from rest_framework import status
 from rest_framework.response import Response
 from .serializers import TaskSerializer, ListSerializer
 from .models import Task
@@ -45,6 +46,11 @@ def taskCreate(request):
 
 @api_view(['DELETE'])
 def taskDelete(request, pk):
-    task = Task.objects.get(id = pk)
-    task.delete()
-    return Response("Taks deleted successfully.")
+    try:
+        task = Task.objects.get(id = pk)
+        task.delete()
+        return Response("Taks deleted successfully.")
+    except Task.DoesNotExist:
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+ 

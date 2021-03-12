@@ -1,6 +1,6 @@
 rm  api/migrations/*
 rm db.sqlite3
-
+python manage.py migrate --run-syncdb
 
 
 
@@ -31,7 +31,7 @@ class Semester(models.Model):
     final_exam_ends = models.DateField(verbose_name=_('final exams end date'),null=True, blank=True)
     is_published = models.BooleanField(verbose_name=_('is published'),default=False)
 
-@property
+    @property
     def registration_days_left(self):
         today = timezone.now().date()
         days_left = None
