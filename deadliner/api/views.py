@@ -7,6 +7,9 @@ from .models import Task
 """
 API Overview
 """
+
+
+
 class ViewPermission(generics.ListAPIView):
     queryset = Task.objects.all()
     task = Task.objects.all()
@@ -22,14 +25,16 @@ def apiOverview(request):
         'Create' : '/task-create/',
         'Update' : '/task-update/<str:pk>/',
         'Delete' : '/task-delete/<str:pk>/',
-        'Create.User' : '/api/v1/auth/',
-        'login.User' : '/api/v1/auth/user/user/by/token/',
+        'Create.User' : '/api/register/',
+        'login.User' : '/api/login/',
+        'logout.User' : '/api/logout/',
+        'logoutall.User' : '/api/logoutall/',
 
     }
     return Response(api_urls)
 
 class taskList(ViewPermission):
-    # @api_view(['GET'])
+    @api_view(['GET'])
     def taskList(request):
         tasks = Task.objects.all()
         serializer = ListSerializer(tasks, many = True)
