@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from datetime import timedelta, datetime
 from .models import Task
 
 class TaskSerializer(serializers.ModelSerializer):
@@ -10,7 +9,7 @@ class TaskSerializer(serializers.ModelSerializer):
 class ListSerializer(serializers.ModelSerializer):
     class Meta:
         model = Task
-        fields = ('title','deadline','completed')
+        fields = ('title','deadline','completed','importance')
 
 
 

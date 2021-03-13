@@ -1,5 +1,6 @@
 from rest_framework.decorators import api_view
 from rest_framework import status
+from django.contrib.auth import authenticate, login
 from rest_framework.response import Response
 from .serializers import TaskSerializer, ListSerializer
 from .models import Task
@@ -19,15 +20,27 @@ def apiOverview(request):
 
 @api_view(['GET'])
 def taskList(request):
-    tasks = Task.objects.all()
-    serializer = ListSerializer(tasks, many = True)
-    return Response(serializer.data)
+    if request.user.is_authenticated:
+        tasks = Task.objects.all()
+        serializer = ListSerializer(tasks, many = True)
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_204_NO_CONTENT)           
+
+
+
 
 @api_view(['GET'])
 def taskDetail(request, pk):
-    tasks = Task.objects.get(id=pk)
-    serializer = TaskSerializer(tasks, many = False)
-    return Response(serializer.data)
+    try:
+        if request.user.is_authenticated:
+            tasks = Task.objects.get(id=pk)
+            serializer = TaskSerializer(tasks, many = False)
+            return Response(serializer.data)
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    except Task.DoesNotExist:
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
 def taskUpdate(request, pk):
@@ -39,17 +52,23 @@ def taskUpdate(request, pk):
 
 @api_view(['POST'])
 def taskCreate(request):
-    serializer = TaskSerializer(data=request.data)
-    if serializer.is_valid():
-        serializer.save()
-    return Response(serializer.data)
+    if request.user.is_authenticated:
+        serializer = TaskSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['DELETE'])
 def taskDelete(request, pk):
     try:
-        task = Task.objects.get(id = pk)
-        task.delete()
-        return Response("Taks deleted successfully.")
+        if request.user.is_authenticated:
+            task = Task.objects.get(id = pk)
+            task.delete()
+            return Response("Task deleted successfully.")
+        else:
+            return Response(status=status.HTTP_204_NO_CONTENT)
     except Task.DoesNotExist:
         return Response(status=status.HTTP_204_NO_CONTENT)
 

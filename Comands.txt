@@ -1,6 +1,9 @@
+//base/ migrations
 rm  api/migrations/*
 rm db.sqlite3
 python manage.py migrate --run-syncdb
+//pip
+python -m ensurepip --default-pip
 
 
 
