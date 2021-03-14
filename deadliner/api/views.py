@@ -9,13 +9,16 @@ API Overview
 """
 
 
-
-class ViewPermission(generics.ListAPIView):
+class ViewListPermission(generics.ListAPIView):
     queryset = Task.objects.all()
-    task = Task.objects.all()
     serializer_class = ListSerializer
     permission_classes = [permissions.IsAuthenticated] 
-  
+
+class ViewPermission(generics.RetrieveAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated] 
+
 
 @api_view(['GET'])
 def apiOverview(request):
@@ -33,7 +36,7 @@ def apiOverview(request):
     }
     return Response(api_urls)
 
-class taskList(ViewPermission):
+class taskList(ViewListPermission):
     @api_view(['GET'])
     def taskList(request):
         tasks = Task.objects.all()
@@ -47,13 +50,16 @@ class taskDetail(ViewPermission):
     @api_view(['GET'])
     def taskDetail(request, pk):
         try:
-            tasks = Task.objects.get(id=pk)
+            tasks = Task.objects.get(id = pk)
             serializer = TaskSerializer(tasks, many = False)
             return Response(serializer.data)
         except Task.DoesNotExist:
                 return Response(status=status.HTTP_204_NO_CONTENT)
 
-class taskUpdate(ViewPermission):
+class taskUpdate(generics.UpdateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated] 
     @api_view(['POST'])
     def taskUpdate(request, pk):
         task = Task.objects.get(id = pk)
@@ -62,7 +68,10 @@ class taskUpdate(ViewPermission):
             serializer.save()
         return Response(serializer.data)
 
-class taskCreate(ViewPermission):
+class taskCreate(generics.ListCreateAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated] 
     @api_view(['POST'])
     def taskCreate(request):
         serializer = TaskSerializer(data=request.data)
@@ -71,7 +80,10 @@ class taskCreate(ViewPermission):
         return Response(serializer.data)
 
 
-class taskDelete(ViewPermission):
+class taskDelete(generics.DestroyAPIView):
+    queryset = Task.objects.all()
+    serializer_class = TaskSerializer
+    permission_classes = [permissions.IsAuthenticated] 
     @api_view(['DELETE'])
     def taskDelete(request, pk):
         try:
@@ -81,4 +93,7 @@ class taskDelete(ViewPermission):
         except Task.DoesNotExist:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
+class taskPage(ViewPermission):
+    def taskPage(request):
+        return render(request, 'task.html')
  
