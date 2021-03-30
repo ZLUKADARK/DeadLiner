@@ -42,10 +42,8 @@ class taskList(ViewListPermission):
         tasks = Task.objects.all()
         serializer = ListSerializer(tasks, many = True)
         return Response(serializer.data)
+
             
-
-
-
 class taskDetail(ViewPermission):
     @api_view(['GET'])
     def taskDetail(request, pk):
@@ -93,7 +91,5 @@ class taskDelete(generics.DestroyAPIView):
         except Task.DoesNotExist:
             return Response(status=status.HTTP_204_NO_CONTENT)
 
-class taskPage(ViewPermission):
-    def taskPage(request):
-        return render(request, 'task.html')
+
  
