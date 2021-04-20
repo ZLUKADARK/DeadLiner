@@ -1,6 +1,17 @@
 <template>
 <v-app>
   <div id="app">
+    <template>
+  <v-tabs
+    fixed-tabs
+    background-color="indigo"
+    dark
+  >
+    <v-tab @click="logmenu()">
+     Выйти
+    </v-tab>
+  </v-tabs>
+</template>
     <template v-if="!token">
       <Auth @auth='authByToken' :baseUrl="baseUrl"/>
     </template>
@@ -24,11 +35,18 @@ export default {
     authByToken: function(response){
       if(response.token){
         this.token = response.token
+        console.log(response.token)
       }
     },
-  },
+    logmenu: function (){
+      this.token = null
+      }
+    },
+
+  
+
   data: () => ({
-    token: "caaf7dc3b78d8fe1a4b39c4861ae21e133669e8c20c5d56cfbc87872e7ca7e12",
+    token: null,
     baseUrl:'http://127.0.0.1:8000/',
   }),
 }

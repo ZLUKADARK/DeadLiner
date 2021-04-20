@@ -1,7 +1,7 @@
 <template>
 <div>
   <v-row justify="center">
-    <v-dialog v-model="dialog" max-width="600">
+    <v-dialog persistent v-model="dialog" max-width="600">
 <template v-if="registration">
   <v-card elevation="28">
         <v-card-title class="headline"> Регистрация </v-card-title>
@@ -37,11 +37,11 @@
           <v-spacer></v-spacer>
 
           <v-btn color="green darken-1" text @click="registraid()">
-            Зарегистрироваться
+            Подтвердить
           </v-btn>
 
-          <v-btn color="green darken-1" text @click="registration = false">
-            Авторизоваться
+          <v-btn color="blue darken-1" text @click="registration = false">
+            Уже есть учетная запись
           </v-btn> 
         </v-card-actions>
       </v-card>
@@ -79,7 +79,7 @@
             Зарегистрироваться
           </v-btn>
 
-          <v-btn color="green darken-1" text @click="authorize()">
+          <v-btn color="blue darken-1" text @click="authorize()">
             Авторизоваться
           </v-btn>
         </v-card-actions>
@@ -91,6 +91,7 @@
 </template>
 
 <script>
+
 export default {
   name: "Auth",
   props: ["baseUrl"],
@@ -102,11 +103,12 @@ export default {
           username: this.username,
           password: this.password,
         })
-        .then(function (response) {
+        .then( response => {
           this_.$emit('auth', response.data)
         })
-        .catch(function (error) {
-          console.error(error);
+        .catch( error => {
+          console.error(error)
+          alert('Ошибка. Для деталей см консоль')
         });
     },
     registraid: function () {
@@ -117,11 +119,12 @@ export default {
           password: this.password,
           email: this.email,
         })
-        .then(function (response) {
+        .then( response => {
           this_.$emit('auth', response.data)
         })
-        .catch(function (error) {
+        .catch( error => {
           console.error(error);
+          alert('Ошибка. Для деталей см консоль')
         });
     },
   },

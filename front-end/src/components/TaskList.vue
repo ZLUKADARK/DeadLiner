@@ -1,13 +1,14 @@
 <template>
   <div >
-    <TaskDetail v-if="dialogItem" :item="dialogItem" @return="proceedButton" :baseUrl="baseUrl" :token="token"/>
+    <TaskDetail v-if="dialogItem" :item="dialogItem" @return="proceedButton" @delete="deleteRecord" :baseUrl="baseUrl" :token="token"/>
     <v-card style="margin-top: 25px" max-width="80%" class="mx-auto">
       <v-card-text>
+
         <v-data-table :headers="tableHeaders" :items="taskList" item-key="id" :hide-default-footer="true" :items-per-page="9999">
 
           <template v-slot:top >
             <div class="justify-end">
-            <v-btn small text color="primary" @click="dialogItem = {}"> <v-icon> mdi-plus-box </v-icon></v-btn>
+            <v-btn small text color="primary" @click="dialogItem = {}"> <v-icon> mdi-plus-box </v-icon> Создать</v-btn>
             </div>
           </template>
 
@@ -24,15 +25,12 @@
           </template>
 
           <template v-slot:[`item.completed`]="{ item }">
-            {{item.completed ? 'Завершена' : 'В процессе'}}
-          </template>
-
-          <template v-slot:[`item.complete`]="{ item }">
-            <v-btn small color="primary" text v-if="item.id && !item.completed" >Завершить</v-btn>
+            <template v-if="item.completed"><v-btn small color="primary"  depressed disabled text v-if="item.id" @click="postTaskList(item) ">Завершена</v-btn> </template>
+            <template v-else> <v-btn small color="primary"  text v-if="item.id" @click="postTaskList(item) ">Завершить</v-btn> </template>
           </template>
 
           <template v-slot:[`item.delete`]="{ item }">
-            <v-btn small color="error" text v-if="item.id" @click="deleteRecord(item)"><v-icon> mdi-delete-forever</v-icon></v-btn>
+            <v-btn small color="error" text v-if="item.id && item.completed" @click="deleteRecord(item)"><v-icon> mdi-delete-forever</v-icon></v-btn>
           </template>
           
         </v-data-table>
@@ -51,7 +49,7 @@ export default {
   components:{
     TaskDetail,
   },
-  props: ["baseUrl", "token"],
+  props: ["baseUrl", "token", "item"],
   mounted: function () {
     this.getTaskList();
 
@@ -65,20 +63,44 @@ export default {
             Authorization: `Token ${this.token}`,
           },
         })
-        .then(function (response) {
+        .then( response => {
           this_.taskList = response.data;
         })
-        .catch(function (error) {
+        .catch( error => {
           console.error(error);
+          alert('Ошибка. Для деталей см консоль')
         })
-        .then(function () {});
     },
+    
+    postTaskList: function(item){
+      let tmpItem = item
+      tmpItem.completed = true
+      this.axios({
+        method: 'patch',
+        url: `${this.baseUrl}task-update/${item.id}/`,
+        data: tmpItem,
+        headers: {
+          Authorization: `Token ${this.token}`
+        }
+      })
+      .then( response => {
+        if (response.status == 200) {
+          item.completed = true
+        }
+      })
+      .catch( error => {
+        console.error(error)
+        alert('Ошибка. Для деталей см консоль')
+      })
+    },
+
     prepareList: function () {
       return this.taskList.filter((item) => {
         if (item.completed == true && this.showComplete) return item;
         if (item.completed == false && this.showIncomplete) return item;
       });
     },
+    
     calcRemainingTime: function (deadline) {
       let today = new Date();
       deadline = new Date(deadline);
@@ -118,7 +140,25 @@ export default {
     },
 
     deleteRecord: function(item) {
-      console.log(item)
+      this.axios({
+        method: 'delete',
+        url: `${this.baseUrl}task-delete/${item.id}/`,
+        data: item,
+        headers: {
+          Authorization: `Token ${this.token}`
+        }
+      })
+      .then( response => {
+        if (response.status == 204) {
+          this.taskList = [...this.taskList.filter(record => {
+            return record.id == item.id ? false : record
+          })]
+        }
+
+        if (this.dialogItem) {
+          this.dialogItem = null
+        }
+      })
     },
     formatDate: function(date) {
       date = date.split('-')
@@ -155,11 +195,6 @@ export default {
       {
         text: "",
         value: "details",
-        sortable: false
-      },
-      {
-        text: "",
-        value: "complete",
         sortable: false
       },
       {

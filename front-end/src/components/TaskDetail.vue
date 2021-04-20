@@ -45,7 +45,6 @@
               :value="calcRemainingTime(deadline)"
             ></v-text-field>
           </div>
-
           <div class="d-inline-block" style="max-width: 25%">
             <v-select
               outlined
@@ -71,8 +70,9 @@
         <v-switch v-model="completed" label="Завершена"></v-switch>
         <v-spacer></v-spacer>
 
+        <v-btn small color="error" text v-if="completed" @click="emitDelete"><v-icon> mdi-delete-forever</v-icon></v-btn>
         <v-btn color="primary" text @click="$emit('return', true)"> закрыть </v-btn>
-        <v-btn color="primary" text @click="send"> Применить </v-btn>
+        <v-btn color="primary" text @click="send"> Применить</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -101,7 +101,7 @@ export default {
             Authorization: `Token ${this.token}`,
           },
         })
-        .then(function (response) {
+        .then( response =>{
           this_.taskDetail = response.data;
           this_.title = response.data.title;
           this_.description = response.data.description;
@@ -109,8 +109,10 @@ export default {
           this_.deadline = response.data.deadline;
           this_.completed = response.data.completed;
         })
-        .catch(function (error) {
+        .catch( error => {
           console.error(error);
+          alert('Ошибка. Для деталей см консоль')
+
         });
     },
     send: function () {
@@ -132,6 +134,7 @@ export default {
         let this_ = this;
 
 
+
         let url = this.baseUrl
         
         if (!this.isNewTask) {
@@ -142,7 +145,6 @@ export default {
         }
 
         console.log(newObj)
-
         this.axios({
           method: this.isNewTask ? 'post' : 'patch',
           url: url,
@@ -151,7 +153,7 @@ export default {
             Authorization: `Token ${this.token}`,
           },
         })
-          .then(function (response) {
+          .then( response => {
             console.log(response);
             console.log(response.status)
             if (response.status == 200 || response.status == 201) {
@@ -159,9 +161,9 @@ export default {
               newObj.id = response.data.id
             }
           })
-          .catch(function (error) {
+          .catch( error => {
             console.error(error);
-            alert('Изменения не были внесены')
+            alert('Ошибка. Для деталей см консоль')
           });
       } else {
         this.$emit("return", true);
@@ -182,23 +184,11 @@ export default {
       }
     },
     clearFields: function() {
-      /*this.taskDetail = {},
-      this.dialog = true,
-      this.edit = false,
-      this.title = null,
-      this.description = null,
-      this.importance = null,
-      this.deadline = null,
-      this.complete = false,
-      this.showDatePicker = false,
-      this.importanceList = ["*****", "***", "*"],
-      this.isNewTask = false*/
-
-
-      //this.$emit('return', true)
         this.$emit('return', true)
-
-      }
+      },
+    emitDelete: function() {
+      this.$emit('delete', this.taskDetail)
+    }
   },
   watch: {
     edit: function (newValue) {
