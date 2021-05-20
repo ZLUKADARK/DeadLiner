@@ -18,45 +18,11 @@ pip install django-cors-headers
 
 
 
-123456asdf
+VUE.JS COM
 
- <!-- <div>
-    <v-card
-      style="margin-bottom: 50px; margin-top: 25px"
-      class="mx-auto"
-      max-width="90%"
-      elevation="10"
-    >
-      <v-card-title> Настройки отображения </v-card-title>
-      <v-card-text>
-        <div>
-           <v-checkbox
-            v-model="showIncomplete"
-            :label="`показать не выполненные`"
-          ></v-checkbox>
-          <v-checkbox
-            v-model="showComplete"
-            :label="`Показать выполненные`"
-          ></v-checkbox>
-        </div>
-      </v-card-text>
-    </v-card>
+npm install -g vue
+npm install -g @vue/cli
 
-    <v-card
-      style="margin-bottom: 25px"
-      v-for="item in prepareList()"
-      :key="item.id"
-      class="mx-auto"
-      max-width="80%"
-    >
-      <v-card-title> {{ item.title }} </v-card-title>
-      <v-card-subtitle>
-        Крайний срок - {{ item.deadline }} ({{ calcRemainingTime(item.deadline) }})
-      </v-card-subtitle>
-      <v-card-text> </v-card-text>
 
-      <v-card-actions>
-        <v-btn text color="deep-purple accent-111"> ПОДРОБНЕЕ </v-btn>
-      </v-card-actions>
-    </v-card>
-  </div> -->
+ vue add vuetify
+ npm install axios --save
