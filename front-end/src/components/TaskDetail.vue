@@ -30,6 +30,7 @@
                 ></v-text-field>
               </template>
               <v-date-picker
+              
                 :readonly="!edit"
                 v-model="deadline"
                 @input="showDatePicker = false"
@@ -66,13 +67,13 @@
       </v-card-text>
 
       <v-card-actions>
-        <v-switch v-model="edit" label="Редактировать"></v-switch>
-        <v-switch v-model="completed" label="Завершена"></v-switch>
+        <v-switch color="#C0CA33" v-model="edit" label="Редактировать"></v-switch>
+        <v-switch color="#C0CA33" v-model="completed" label="Завершена"></v-switch>
         <v-spacer></v-spacer>
 
-        <v-btn small color="error" text v-if="completed" @click="emitDelete"><v-icon> mdi-delete-forever</v-icon></v-btn>
-        <v-btn color="primary" text @click="$emit('return', true)"> закрыть </v-btn>
-        <v-btn color="primary" text @click="send"> Применить</v-btn>
+        <v-btn small color="#FF1744" text v-if="completed" @click="emitDelete"><v-icon> mdi-delete-forever</v-icon></v-btn>
+        <v-btn color="#00E5FF" text @click="$emit('return', true)"> закрыть </v-btn>
+        <v-btn color="#C0CA33" text @click="send"> Применить</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -144,7 +145,7 @@ export default {
           url += 'task-create/' 
         }
 
-        console.log(newObj)
+ 
         this.axios({
           method: this.isNewTask ? 'post' : 'patch',
           url: url,
@@ -154,8 +155,7 @@ export default {
           },
         })
           .then( response => {
-            console.log(response);
-            console.log(response.status)
+
             if (response.status == 200 || response.status == 201) {
               this_.$emit("return", newObj);
               newObj.id = response.data.id

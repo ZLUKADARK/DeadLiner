@@ -2,15 +2,23 @@
 <v-app>
   <div id="app">
     <template>
-  <v-tabs
-    fixed-tabs
-    background-color="indigo"
-    dark
-  >
-    <v-tab @click="logmenu()">
-     Выйти
+  <v-app-bar color="#DCE775">
+
+    <v-tab><h2>DeadLiner</h2></v-tab>
+    <v-spacer></v-spacer>
+
+
+    <v-tab >
+      <v-btn 
+      @click="logmenu()"
+      color="#D4E157"
+      elevation="2"
+      >
+      Выйти
+      </v-btn>
+     
     </v-tab>
-  </v-tabs>
+  </v-app-bar>
 </template>
     <template v-if="!token">
       <Auth @auth='authByToken' :baseUrl="baseUrl"/>
@@ -18,6 +26,7 @@
     <template v-else >
       <TaskList :baseUrl="baseUrl" :token="token"/>
     </template>
+  
   </div>
 </v-app>
 </template>
@@ -33,25 +42,27 @@ export default {
   },
   methods:{
     authByToken: function(response){
-      if(response.token){
-        this.token = response.token
-        console.log(response.token)
+      if(response.token){    
+        localStorage.token = response.token
+        this.token = localStorage.token
       }
     },
     logmenu: function (){
       this.token = null
+      localStorage.token = 0
       }
     },
 
   
 
   data: () => ({
-    token: null,
+    token: localStorage.token == 0 ? null : localStorage.token,
     baseUrl:'http://127.0.0.1:8000/',
   }),
 }
 </script>
 
 <style>
+
 
 </style>

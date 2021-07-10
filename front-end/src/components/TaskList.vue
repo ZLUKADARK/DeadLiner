@@ -4,16 +4,16 @@
     <v-card style="margin-top: 25px" max-width="80%" class="mx-auto">
       <v-card-text>
 
-        <v-data-table :headers="tableHeaders" :items="taskList" item-key="id" :hide-default-footer="true" :items-per-page="9999">
+        <v-data-table :headers="tableHeaders" :items="taskList" item-key="id" :hide-default-footer="true" :items-per-page="20">
 
           <template v-slot:top >
             <div class="justify-end">
-            <v-btn small text color="primary" @click="dialogItem = {}"> <v-icon> mdi-plus-box </v-icon> Создать</v-btn>
+            <v-btn small text color="#C0CA33" @click="dialogItem = {}"> <v-icon> mdi-plus-box </v-icon> Создать</v-btn>
             </div>
           </template>
 
           <template v-slot:[`item.details`]="{ item }">
-            <v-btn small color="primary" text v-if="item.id" @click="show(item)" > Детально </v-btn>
+            <v-btn small color="#C0CA33" text v-if="item.id" @click="show(item)" > Детально </v-btn>
           </template>
 
           <template v-slot:[`item.deadline`]="{ item }">
@@ -25,12 +25,12 @@
           </template>
 
           <template v-slot:[`item.completed`]="{ item }">
-            <template v-if="item.completed"><v-btn small color="primary"  depressed disabled text v-if="item.id" @click="postTaskList(item) ">Завершена</v-btn> </template>
-            <template v-else> <v-btn small color="primary"  text v-if="item.id" @click="postTaskList(item) ">Завершить</v-btn> </template>
+            <template v-if="item.completed"><v-btn small depressed disabled text v-if="item.id" @click="postTaskList(item) ">Завершена</v-btn> </template>
+            <template v-else> <v-btn small color="#C0CA33"  text v-if="item.id" @click="postTaskList(item) ">Завершить</v-btn> </template>
           </template>
 
           <template v-slot:[`item.delete`]="{ item }">
-            <v-btn small color="error" text v-if="item.id && item.completed" @click="deleteRecord(item)"><v-icon> mdi-delete-forever</v-icon></v-btn>
+            <v-btn small color="#FF1744" text v-if="item.id && item.completed" @click="deleteRecord(item)"><v-icon> mdi-delete-forever</v-icon> Удалить</v-btn>
           </template>
           
         </v-data-table>
@@ -163,13 +163,14 @@ export default {
     formatDate: function(date) {
       date = date.split('-')
       return `${date[2]}.${date[1]}.${date[0]}`
-    }
+    },
+    
   },
   data: () => ({
     taskList: [],
     showComplete: false,
     showIncomplete: true,
-    sortMethod: ["Сначала выполненные", "Сначала не выполненные"],
+
     dialogItem: null,
     tableHeaders: [
       {

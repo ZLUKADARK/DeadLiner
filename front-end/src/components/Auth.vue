@@ -34,14 +34,14 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-spacer></v-spacer>
+         
 
-          <v-btn color="green darken-1" text @click="registraid()">
+          <v-btn color="#C0CA33" text @click="registraid()">
             Подтвердить
           </v-btn>
-
-          <v-btn color="blue darken-1" text @click="registration = false">
-            Уже есть учетная запись
+ <v-spacer></v-spacer>
+          <v-btn color="#00E5FF" text @click="registration = false">
+            Назад =>
           </v-btn> 
         </v-card-actions>
       </v-card>
@@ -49,7 +49,7 @@
 <template v-else>
 
       <v-card elevation="28">
-        <v-card-title class="headline"> Авторизация </v-card-title>
+        <v-card-title  class="headline"> Авторизация </v-card-title>
 
         <v-card-text>
           <div>
@@ -73,13 +73,13 @@
         </v-card-text>
 
         <v-card-actions>
-          <v-spacer></v-spacer>
+         
 
-          <v-btn color="green darken-1" text @click="registration=true">
+          <v-btn color="#C0CA33" text @click="registration=true">
             Зарегистрироваться
           </v-btn>
-
-          <v-btn color="blue darken-1" text @click="authorize()">
+ <v-spacer></v-spacer>
+          <v-btn color="#00E5FF" text @click="authorize()">
             Авторизоваться
           </v-btn>
         </v-card-actions>
@@ -94,7 +94,7 @@
 
 export default {
   name: "Auth",
-  props: ["baseUrl"],
+  props: ["baseUrl" ],
   methods: {
     authorize: function () {
       let this_ = this
